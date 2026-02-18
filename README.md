@@ -50,6 +50,7 @@ PC1 -------- SW1 -------- R1 -------- PC3
               |
              PC2
 ```
+<img width="627" height="346" alt="image" src="https://github.com/user-attachments/assets/f2e556da-c573-4558-9d95-eabe1c5134ae" />
 
 ---
 
@@ -94,6 +95,7 @@ name ADMIN
 vlan 20
 name USERS
 ```
+<img width="614" height="188" alt="image" src="https://github.com/user-attachments/assets/60a3cc17-cb46-4a45-926e-8fbd321bb176" />
 
 ---
 
@@ -112,6 +114,8 @@ interface f0/3
 switchport mode access
 switchport access vlan 20
 ```
+<img width="614" height="188" alt="image" src="https://github.com/user-attachments/assets/60a3cc17-cb46-4a45-926e-8fbd321bb176" />
+
 
 ---
 
@@ -121,6 +125,7 @@ switchport access vlan 20
 interface f0/24
 switchport mode trunk
 ```
+<img width="503" height="166" alt="image" src="https://github.com/user-attachments/assets/893db40a-c080-4538-a2de-ae9041d7c4d2" />
 
 ---
 
@@ -140,6 +145,7 @@ ip address 192.168.20.1 255.255.255.0
 interface g0/0
 no shutdown
 ```
+<img width="597" height="59" alt="image" src="https://github.com/user-attachments/assets/c0d21437-78b2-4ae4-8bfd-176c6a8ab711" />
 
 ---
 
@@ -156,6 +162,7 @@ PC1 → PC2
 👉 Doit fonctionner
 
 * * Copie d'écran ici * *  
+<img width="815" height="252" alt="image" src="https://github.com/user-attachments/assets/c7314ffa-0bbf-4568-bad9-5cce51015016" />
 
 ---
 
@@ -164,15 +171,16 @@ PC1 → PC3
 👉 Fonctionne uniquement grâce au routeur
 
 * * Copie d'écran ici * *  
-  
+  <img width="508" height="577" alt="image" src="https://github.com/user-attachments/assets/9be5b95b-4fbf-4d7d-bf4a-509718cade64" />
+
 ---
 
 # ❓ Questions de réflexion
 
-1. Pourquoi PC1 ne voit-il pas PC3 sans routeur ? -> Répondez directement sur ce Readme.md 
-2. Quel rôle joue le masque /24 ? -> Répondez directement sur ce Readme.md  
-3. Que se passe-t-il si VLAN 10 et VLAN 20 ont le même réseau IP ? -> Répondez directement sur ce Readme.md  
-4. Pourquoi un trunk est-il nécessaire ? -> Répondez directement sur ce Readme.md
+1. Pourquoi PC1 ne voit-il pas PC3 sans routeur ? -> Car ils sont sur deux réseaux différent et sur 2 vlan différent dans ce cas il necessite un niveau 3 pour router les paquets.
+2. Quel rôle joue le masque /24 ? -> Le masque défini la partie hôte et réseau ici 255.255.255.0 Donc les 3 premiers octets défini le réseau et le dernier octet défini la partie machine
+3. Que se passe-t-il si VLAN 10 et VLAN 20 ont le même réseau IP ? -> Les réseaux vont s'entre choquer et entrainera des défailliances.
+4. Pourquoi un trunk est-il nécessaire ? -> Le trunk est necessaire car l'on veut que plusieurs VLAN puisse passer par le même port/câble. (évite d'utiliser 4096 câble pour chaque vlan sachant que les routeurs ont souvant moins de ports que les switchs).
 
 ---
 
@@ -183,19 +191,47 @@ Changer VLAN 10 en :
 ```
 192.168.10.0/25
 ```
+<img width="449" height="117" alt="image" src="https://github.com/user-attachments/assets/7ada07c4-9541-480e-9f26-406ee465a905" />
 
 Questions :
-- Combien d’hôtes max ?  
-- Quelle plage IP valide ?  
-- Peut-on encore communiquer avec VLAN 20 ?
+- Combien d’hôtes max ?  126 hôtes possible car le dernier octet 2^7 = 128-2 (une adresse réseau et une broadcast)
+- Quelle plage IP valide ?  192.168.10.1-127
+- Peut-on encore communiquer avec VLAN 20 ?  Oui car le routeur fais le liens avec le VLAN 20 via le GW configurer sur chaque ordinateur qui indique l'adresse du routeur.
 
 ---
 
 # 🚀 Extensions
 
-- Ajouter VLAN 30  
-- Mettre un DHCP par VLAN  
-  
+- Ajouter VLAN 30
+interface g0/0.30
+encapsulation dot1Q 30
+ip address 192.168.30.1 255.255.255.0
+<img width="590" height="128" alt="image" src="https://github.com/user-attachments/assets/6f5a67bc-fc55-4c52-ba88-812ff664e525" />
+
+- Mettre un DHCP par VLAN
+```
+ en
+ conf t
+ ip dhcp pool vlan10
+ network 192.168.10.0 255.255.255.128
+default-router 192.168.10.1
+dns-server 8.8.8.8
+exit
+ip dhcp pool vlan20
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.1
+dns-server 8.8.8.8
+exit
+ip dhcp pool vlan30
+network 192.168.30.0 255.255.255.0
+default-router 192.168.30.1
+dns-server 8.8.8.8
+exit
+```
+ 
+<img width="589" height="487" alt="image" src="https://github.com/user-attachments/assets/ac73edad-4dc1-421b-b4ab-dfa2b1cb6b98" />
+<img width="1826" height="630" alt="image" src="https://github.com/user-attachments/assets/5364d44f-0443-4481-b94f-869f602eb9b6" />
+
 ---
 
 # 📝 Évaluation (/20)
@@ -213,5 +249,5 @@ Extention | 2 |
 
 Si vous savez expliquer :
 > "Pourquoi deux VLAN ne communiquent pas sans routeur ?"
-
+Les VLANs ne peut communiquer sans routeur car ils sont sur 2 réseaux différent et qu'il y a une séparation logique via les tags. Pour communiquer sans routeur il faudrait un switch de niveau 3 avec un routage inter vlan.
 Alors vous avez compris la segmentation réseau 👍
