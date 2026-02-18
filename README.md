@@ -203,10 +203,20 @@ Questions :
 # 🚀 Extensions
 
 - Ajouter VLAN 30
+Sur le routeur
+```
 interface g0/0.30
 encapsulation dot1Q 30
 ip address 192.168.30.1 255.255.255.0
+```
 <img width="590" height="128" alt="image" src="https://github.com/user-attachments/assets/6f5a67bc-fc55-4c52-ba88-812ff664e525" />
+Sur le switch
+```
+interface f0/4
+switchport mode access
+switchport access vlan 30
+```
+<img width="573" height="147" alt="image" src="https://github.com/user-attachments/assets/454df1c7-cd51-42c4-90cc-7193dd293133" />
 
 - Mettre un DHCP par VLAN
 ```
@@ -231,6 +241,9 @@ exit
  
 <img width="589" height="487" alt="image" src="https://github.com/user-attachments/assets/ac73edad-4dc1-421b-b4ab-dfa2b1cb6b98" />
 <img width="1826" height="630" alt="image" src="https://github.com/user-attachments/assets/5364d44f-0443-4481-b94f-869f602eb9b6" />
+
+CE N'ETAIT PAS SPECIFIE MAIS VOICI UN PC4 DANS LE VLAN30
+<img width="1221" height="780" alt="image" src="https://github.com/user-attachments/assets/29a6a5ed-048c-4388-9b6d-bba4046332a0" />
 
 ---
 
