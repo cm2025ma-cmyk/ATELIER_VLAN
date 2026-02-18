@@ -210,12 +210,16 @@ encapsulation dot1Q 30
 ip address 192.168.30.1 255.255.255.0
 ```
 <img width="590" height="128" alt="image" src="https://github.com/user-attachments/assets/6f5a67bc-fc55-4c52-ba88-812ff664e525" />
+
+
 Sur le switch
+
 ```
 interface f0/4
 switchport mode access
 switchport access vlan 30
 ```
+
 <img width="573" height="147" alt="image" src="https://github.com/user-attachments/assets/454df1c7-cd51-42c4-90cc-7193dd293133" />
 
 - Mettre un DHCP par VLAN
